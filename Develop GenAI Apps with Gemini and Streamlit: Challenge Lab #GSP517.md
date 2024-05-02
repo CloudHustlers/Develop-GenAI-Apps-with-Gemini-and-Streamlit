@@ -19,7 +19,7 @@ gsutil cp gs://spls/gsp517/chef.py .
 ### Open the chef.py file in the Cloud Shell Editor and review the code.
 
 ```cmd
-nano chef.py
+vi chef.py
 ```
 
 > For see the line number ```:set nu```.
@@ -51,7 +51,7 @@ and the nutritional facts.
 """
 
 ```
-> Save the file using ```ctrl+O``` then ```enter``` then ```ctrl+x```
+> Save the file using ```esc``` then ```:wq``` 
 
 ### Run in Cloud shell
 ```cmd
@@ -78,8 +78,10 @@ streamlit run chef.py \
 
 -------open app link and create a recipe.
 
-> vi Dockerfile -------------------- a command to change app.py to chef.py
-
+>   change app.py to chef.py 
+```cmd
+vi Dockerfile
+```
 change ```app.py``` to ```chef.py```
 ```cmd
 AR_REPO='<Repo name from lab>'
