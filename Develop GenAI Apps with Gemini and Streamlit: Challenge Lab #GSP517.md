@@ -24,13 +24,14 @@ vi chef.py
 
 > For see the line number ```:set nu```.
 > For search changes in the task ```:/2.5```.
+> FOR CHANGES press ```i``` to INSERT
 
 ### Changes in chef.py file in line no. 104
 ```cmd
 wine = st.radio("Select wine Type", ['Red', 'White', 'None'], key='wine')
 ```
 
-### add prompt in line no. 107.
+### add prompt in line no. 110.
 
 ```cmd
 prompt = f"""I am a Chef.  I need to create {cuisine} \n
@@ -54,9 +55,7 @@ and the nutritional facts.
 > Save the file using ```esc``` then ```:wq``` 
 
 ### Run in Cloud shell
-```cmd
-gcloud storage cp chef.py gs://set at lab start-generative-ai/
-```
+> ```COPY the LAST COMMAND FROM TASK 2 AND RUN IN CLOUD SHELL```
 
 ## TASK3
 ```cmd
