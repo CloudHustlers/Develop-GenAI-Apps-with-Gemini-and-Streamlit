@@ -1,65 +1,106 @@
-> Using nano editor 
+## TASK 1 Complete Manually. Go through the video.
+
+## TASK 2
+
+### Using Cloud Shell clone the repo below from the default directory.
 ```cmd
- nano chef.py
+git clone https://github.com/GoogleCloudPlatform/generative-ai.git
 ```
-```cmd
-wine = st.radio(
-          "What wine do you prefer?\n\n", ["Red", "white", "None"], key="wine", horizontal=True
-        )
-```
-> save file using ```ctrl+O``` than ```Enter``` Then ```ctrl + x```
+### Navigate to the gemini-streamlit-cloudrun directory.
 
 ```cmd
-PROJECT=' '
+cd generative-ai/gemini/sample-apps/gemini-streamlit-cloudrun
 ```
+### Download the chef.py file using the following command.
+
 ```cmd
-REGION=' '
+gsutil cp gs://spls/gsp517/chef.py .
+```
+### Open the chef.py file in the Cloud Shell Editor and review the code.
+
+```cmd
+nano chef.py
 ```
 
-> Create virtual environment
+> For see the line number ```:set nu```.
+> For search changes in the task ```:/2.5```.
+
+### Changes in chef.py file in line no. 104
+```cmd
+wine = st.radio("Select wine Type", ['Red', 'White', 'None'], key='wine')
+```
+
+### add prompt in line no. 107.
+
+```cmd
+prompt = f"""I am a Chef.  I need to create {cuisine} \n
+recipes for customers who want {dietary_preference} meals. \n
+However, don't include recipes that use ingredients with the customer's {allergy} allergy. \n
+I have {ingredient_1}, \n
+{ingredient_2}, \n
+and {ingredient_3} \n
+in my kitchen and other ingredients. \n
+The customer's wine preference is {wine} \n
+Please provide some for meal recommendations.
+For each recommendation include preparation instructions,
+time to prepare
+and the recipe title at the begining of the response.
+Then include the wine paring for each recommendation.
+At the end of the recommendation provide the calories associated with the meal
+and the nutritional facts.
+"""
+
+```
+> Save the file using ```ctrl+O``` then ```enter``` then ```ctrl+x```
+
+### Run in Cloud shell
+```cmd
+gcloud storage cp chef.py gs://set at lab start-generative-ai/
+```
+
+## TASK3
 ```cmd
 python3 -m venv gemini-streamlit
-```
-
-
-> Activate virtual environment
-```cmd
 source gemini-streamlit/bin/activate
+pip install -r requirements.txt
+```
+```cmd
+GCP_PROJECT='<Project id>'
+GCP_REGION='<region>'
+```
+```cmd
+streamlit run chef.py \
+  --browser.serverAddress=localhost \
+  --server.enableCORS=false \
+  --server.enableXsrfProtection=false \
+  --server.port 8080
 ```
 
+-------open app link and create a recipe.
 
-> Install dependencies
-```cmd
-python3 -m pip install -r requirements.txt
-```
+> vi Dockerfile -------------------- a command to change app.py to chef.py
 
-> Run Streamlit app for development (modify options as needed)
+change ```app.py``` to ```chef.py```
 ```cmd
-streamlit run chef.py --browser.serverAddress=localhost --server.enableCORS=false --server.enableXsrfProtection=false --server.port 8080
+AR_REPO='<Repo name from lab>'
+SERVICE_NAME='<service name from lab>'
 ```
-> Create empty Dockerfile
+## TASK 4
 ```cmd
-nano Dockerfile
-```
-paste ```chef.py``` in docker file in entrypoint.
-save file using ```ctrl+O``` than ```Enter``` Then ```ctrl + x```
-
-
-> Google Cloud Run deployment (configure based on your project)
-```cmd
-AR_REPO='chef-repo'
-```
-```cmd
-SERVICE_NAME='chef-streamlit-app'
+gcloud artifacts repositories create "$AR_REPO" --location="$GCP_REGION" --repository-format=Docker
+gcloud builds submit --tag "$GCP_REGION-docker.pkg.dev/$GCP_PROJECT/$AR_REPO/$SERVICE_NAME"
 ```
 
+## Task 5
 ```cmd
-gcloud artifacts repositories create "$AR_REPO" --location "$REGION" --repository-format=Docker
+gcloud run deploy "$SERVICE_NAME" \
+  --port=8080 \
+  --image="$GCP_REGION-docker.pkg.dev/$GCP_PROJECT/$AR_REPO/$SERVICE_NAME" \
+  --allow-unauthenticated \
+  --region=$GCP_REGION \
+  --platform=managed  \
+  --project=$GCP_PROJECT \
+  --set-env-vars=GCP_PROJECT=$GCP_PROJECT,GCP_REGION=$GCP_REGION
 ```
-```cmd
-gcloud builds submit --tag "$REGION-docker.pkg.dev/$PROJECT/$AR_REPO/$SERVICE_NAME"
-```
-```cmd
-gcloud run deploy "$SERVICE_NAME" --port=8080 --image="$REGION-docker.pkg.dev/$PROJECT/$AR_REPO/$SERVICE_NAME" --allow-unauthenticated --region=$REGION --platform=managed --project=$PROJECT --set-env-vars=PROJECT=$PROJECT,REGION=$REGION
-```
+> Again Create a receipe
 
