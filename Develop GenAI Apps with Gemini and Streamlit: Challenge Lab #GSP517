@@ -1,0 +1,58 @@
+```cmd
+nano chef.py
+```
+
+```cmd
+wine = st.radio(
+          "What wine do you prefer?\n\n", ["Red", "white", "None"], key="wine", horizontal=True
+        )
+```
+
+```cmd
+PROJECT=' '
+```
+
+```cmd
+REGION=' '
+```
+
+```cmd
+python3 -m venv gemini-streamlit
+```
+
+```cmd
+source gemini-streamlit/bin/activate
+```
+
+```cmd
+python3 -m pip install -r requirements.txt
+```
+
+```cmd
+streamlit run chef.py --browser.serverAddress=localhost --server.enableCORS=false --server.enableXsrfProtection=false --server.port 8080
+```
+```cmd
+nano Dockerfile
+```
+> Add ```chef.py``` in docker code 
+
+```cmd
+AR_REPO='chef-repo'
+```
+
+```cmd
+SERVICE_NAME='chef-streamlit-app'
+```
+
+```cmd
+gcloud artifacts repositories create "$AR_REPO" --location "$REGION" --repository-format=Docker
+```
+```cmd
+gcloud builds submit --tag "$REGION-docker.pkg.dev/$PROJECT/$AR_REPO/$SERVICE_NAME"
+```
+
+
+﻿
+```cmd
+gcloud run deploy "$SERVICE_NAME" --port=8080 --image="$REGION-docker.pkg.dev/$PROJECT/$AR_REPO/$SERVICE_NAME" --allow-unauthenticated --region=$REGION --platform=managed --project=$PROJECT --set-env-vars=PROJECT=$PROJECT,REGION=$REGION
+```
